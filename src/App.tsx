@@ -57,19 +57,54 @@ function App() {
     let currentLine = "";
 
     for (let i = 0; i < words.length; i++) {
-      const word = words[i];
-      const testLine = currentLine ? `${currentLine} ${word}` : word;
-      const metrics = ctx.measureText(testLine);
+      let word = words[i];
+      let testLine = currentLine ? `${currentLine} ${word}` : word;
+      let metrics = ctx.measureText(testLine);
 
-      if (metrics.width > TEXT_CONFIG.maxWidth) {
-        // If current line exceeds maxWidth, render the current line
+      // If a single word is too wide, split it character by character
+      if (
+        metrics.width > TEXT_CONFIG.maxWidth &&
+        ctx.measureText(word).width > TEXT_CONFIG.maxWidth
+      ) {
+        // If we already have content in currentLine, render it first
+        if (currentLine) {
+          if (y + lineHeight > startY + maxHeight) {
+            textFits = false;
+            break;
+          }
+          const xOffset =
+            (y - transform.xOffsetBaseY) * transform.xOffsetMultiplier;
+          ctx.fillText(currentLine, startX + xOffset, y);
+          y += lineHeight;
+          currentLine = "";
+        }
+
+        // Split the long word character by character
+        for (let j = 0; j < word.length; j++) {
+          const char = word[j];
+          const testChar = currentLine + char;
+          metrics = ctx.measureText(testChar);
+
+          if (metrics.width > TEXT_CONFIG.maxWidth) {
+            if (y + lineHeight > startY + maxHeight) {
+              textFits = false;
+              break;
+            }
+            const xOffset =
+              (y - transform.xOffsetBaseY) * transform.xOffsetMultiplier;
+            ctx.fillText(currentLine, startX + xOffset, y);
+            y += lineHeight;
+            currentLine = char;
+          } else {
+            currentLine += char;
+          }
+        }
+      } else if (metrics.width > TEXT_CONFIG.maxWidth) {
+        // Normal word wrapping for lines that are too long
         if (y + lineHeight > startY + maxHeight) {
-          // If adding this line exceeds maxHeight, indicate text doesn't fit
           textFits = false;
           break;
         }
-
-        // Draw the current line
         const xOffset =
           (y - transform.xOffsetBaseY) * transform.xOffsetMultiplier;
         ctx.fillText(currentLine, startX + xOffset, y);
