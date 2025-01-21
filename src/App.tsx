@@ -165,10 +165,12 @@ function App() {
   useEffect(() => {
     // Load both images on mount
     const trumpImage = new Image();
-    trumpImage.src = "/trump.png";
+    trumpImage.src =
+      "https://raw.githubusercontent.com/Beasleydog/execorder/refs/heads/main/public/trump.png";
 
     const hands = new Image();
-    hands.src = "/hand.png";
+    hands.src =
+      "https://raw.githubusercontent.com/Beasleydog/execorder/refs/heads/main/public/hand.png";
 
     // Wait for both images to load
     Promise.all([
