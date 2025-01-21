@@ -186,7 +186,8 @@ function App() {
   useEffect(() => {
     if (imageLoaded && handsImage) {
       const image = new Image();
-      image.src = "/trump.png";
+      image.src =
+        "https://raw.githubusercontent.com/Beasleydog/execorder/refs/heads/main/public/trump.png";
       image.onload = () => drawCanvas(image, handsImage);
     }
   }, [text, imageLoaded, handsImage]);
@@ -229,7 +230,7 @@ function App() {
             marginTop: "2rem",
           }}
         >
-          Office of the President
+          Presidential Decree
         </h1>
         <h2
           style={{
@@ -245,7 +246,7 @@ function App() {
             marginTop: "-2rem",
           }}
         >
-          Executive Order Generator
+          Executive Order Simulator
         </h2>
 
         <canvas
